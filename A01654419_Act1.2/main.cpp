@@ -25,10 +25,54 @@ void lineBreak()
 	std::cout << std::endl;
 }
 
-
-startTransaction(int arr[], int price, int money)
+void swap(int posA, int posB)
 {
+	int aux = posA;
+	posA = posB;
+	posB = aux;
+}
 
+int partition(int arr[], int low, int high)
+{
+	int pivote = arr[high];
+	int index = (low - 1);
+
+	for(int j = low; j <= high-1; j++)
+	{
+		if (arr[j] <= pivote)
+		{
+			index++;
+			swap(arr[j], arr[index]);
+		}
+	}
+
+	swap(arr[high], arr[index+1]);
+	return index+1;
+}
+
+void quickSort(int arr[], int low, int high)
+{
+	if (low < high)
+	{
+		int pivote = partition(arr, low, high);
+		quickSort(arr, low, pivote -1);
+		quickSort(arr, pivote + 1, high);
+	}
+}
+
+void startTransaction(int arr[], int size, int price, int money)
+{
+	// In order to make this easier, arr is sorted with quick sort
+	quickSort(arr, 0, size);
+	prtArr(arr, size);
+
+	// One way to do this is to think of the problem as an automata
+	int final_state = price - money; // this is the quantity that should be return to the user
+
+	/* while (final_state > 0) */
+	/* { */
+
+	/* } */
 }
 
 int main()
@@ -217,6 +261,6 @@ int main()
 	std::cout << "Price of the product: " << price << std::endl;
 	std::cout << "Money payed: " << money << std::endl;
 
-	startTransaction(arr, price, money); // non-greedy algorithm - dynamic programming
+	startTransaction(arr, convert, price, money); // non-greedy algorithm - dynamic programming
 	return 0;
 }
