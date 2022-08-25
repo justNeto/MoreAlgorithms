@@ -53,8 +53,15 @@ void quickSort(int arr[], int first, int last)
     } 
 } 
 
-void getMostEfficient(int bank[], int result[], int final_state, int current_state)
+void findSolution(int bank[], int result[], int final_state, int current_state)
 {
+	// Current state is the money that shall be returned 
+	if ((final_state - current_state) == 0)
+	{
+		return;
+	}
+	
+	current_state
 
 }
 
@@ -65,9 +72,14 @@ void startTransaction(int arr[], int size, int price, int money)
 	prtArr(arr, size);
 
 	// One way to do this is to think of the problem as an automata
-	int final_state = price - money; // this is the quantity that should be return to the user
+	int final_state = money - price; // this is the quantity that should be return to the user
 
-	int result[];
+	int result[size];
+
+	std::cout << "Dynamic solution: " << "\n";
+	findSolution(arr, result, final_state, 0);
+	prtArr(result, size);
+
 
 }
 
@@ -86,9 +98,7 @@ int main()
 			std::cout << "Error. Please enter a number.\n";
 			std::cin.clear();
 			std::cin.ignore(10000, '\n');
-
-			continue;
-		}
+continue; }
 
 
 		// Convert double to int
