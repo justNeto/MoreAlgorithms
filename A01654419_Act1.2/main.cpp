@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 /*
    Programa hecho por github.com/justNeto
    Matricula: A01654419
@@ -25,54 +24,51 @@ void lineBreak()
 	std::cout << std::endl;
 }
 
-void swap(int posA, int posB)
+int partition (int arr[], int first, int last) 
+{ 
+    int pivot = arr[last]; // pivot 
+    int i = (first - 1); // Index of smaller element and indicates the right position of pivot found so far
+  
+    for (int j = first; j <= last - 1; j++) 
+    { 
+        // If current element is smaller than the pivot 
+        if (arr[j] > pivot) 
+        { 
+            i++; // increment index of smaller element 
+	    std::swap(arr[i], arr[j]); 
+        } 
+    } 
+    std::swap(arr[i + 1], arr[last]); 
+    return (i + 1); 
+} 
+  
+void quickSort(int arr[], int first, int last) 
+{ 
+    if (first < last) 
+    { 
+        int mid = partition(arr, first, last); // 
+  
+        quickSort(arr, last, mid - 1); // sort elements from [low , , , -> mid, , , , end]
+        quickSort(arr, mid + 1, last); // sort elements from [low , , , mid, , , ,-> end]
+    } 
+} 
+
+void getMostEfficient(int bank[], int result[], int final_state, int current_state)
 {
-	int aux = posA;
-	posA = posB;
-	posB = aux;
-}
 
-int partition(int arr[], int low, int high)
-{
-	int pivote = arr[high];
-	int index = (low - 1);
-
-	for(int j = low; j <= high-1; j++)
-	{
-		if (arr[j] <= pivote)
-		{
-			index++;
-			swap(arr[j], arr[index]);
-		}
-	}
-
-	swap(arr[high], arr[index+1]);
-	return index+1;
-}
-
-void quickSort(int arr[], int low, int high)
-{
-	if (low < high)
-	{
-		int pivote = partition(arr, low, high);
-		quickSort(arr, low, pivote -1);
-		quickSort(arr, pivote + 1, high);
-	}
 }
 
 void startTransaction(int arr[], int size, int price, int money)
 {
 	// In order to make this easier, arr is sorted with quick sort
-	quickSort(arr, 0, size);
+	quickSort(arr, 0, size-1);
 	prtArr(arr, size);
 
 	// One way to do this is to think of the problem as an automata
 	int final_state = price - money; // this is the quantity that should be return to the user
 
-	/* while (final_state > 0) */
-	/* { */
+	int result[];
 
-	/* } */
 }
 
 int main()
