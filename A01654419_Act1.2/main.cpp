@@ -24,45 +24,96 @@ void lineBreak()
 	std::cout << std::endl;
 }
 
-int partition (int arr[], int first, int last) 
-{ 
-    int pivot = arr[last]; // pivot 
+int partition (int arr[], int first, int last)
+{
+    int pivot = arr[last]; // pivot
     int i = (first - 1); // Index of smaller element and indicates the right position of pivot found so far
-  
-    for (int j = first; j <= last - 1; j++) 
-    { 
-        // If current element is smaller than the pivot 
-        if (arr[j] > pivot) 
-        { 
-            i++; // increment index of smaller element 
-	    std::swap(arr[i], arr[j]); 
-        } 
-    } 
-    std::swap(arr[i + 1], arr[last]); 
-    return (i + 1); 
-} 
-  
-void quickSort(int arr[], int first, int last) 
-{ 
-    if (first < last) 
-    { 
-        int mid = partition(arr, first, last); // 
-  
+
+    for (int j = first; j <= last - 1; j++)
+    {
+        // If current element is smaller than the pivot
+        if (arr[j] > pivot)
+        {
+            i++; // increment index of smaller element
+	    std::swap(arr[i], arr[j]);
+        }
+    }
+    std::swap(arr[i + 1], arr[last]);
+    return (i + 1);
+}
+
+void quickSort(int arr[], int first, int last)
+{
+    if (first < last)
+    {
+        int mid = partition(arr, first, last); //
+
         quickSort(arr, last, mid - 1); // sort elements from [low , , , -> mid, , , , end]
         quickSort(arr, mid + 1, last); // sort elements from [low , , , mid, , , ,-> end]
-    } 
-} 
+    }
+}
 
-void findSolution(int bank[], int result[], int final_state, int current_state)
+/* void findSolution(int bank[], int size, int final_state, int current_state, int bank_index, int aux2) */
+void findSolution(int bank[], int size, int final_state, int current_state, int bank_index)
 {
-	// Current state is the money that shall be returned 
-	if ((final_state - current_state) == 0)
+
+	if (debug)
 	{
+		std::cout << "::- [ Before operations / check initial information ]\n";
+
+		std::cout << "Current state: " << current_state << "\n";
+		std::cout << "Returned so far: " << final_state - current_state << "\n";
+
+		std::cout << "Bank index: " << bank_index << "\n";
+		std::cout << "Bank: \n";
+		prtArr(bank, size);
+
+		std::cout << "\n| ------------------------------ |\n";
+	}
+
+	if (bank_index == size)
+	{
+		std::cout << "There is no way to return exact fare.\n";
+		exit(0);
+	}
+
+	int aux = current_state + bank[bank_index]; // auxiliar value to check if it should change index or not
+//	current_state += bank[bank_index]; // this adds to the fare that has to be returned
+
+	if (debug)
+	{
+		std::cout << "::- [ Current state updated ] \n\n";
+		std::cout << current_state << "\n";
+		std::cout << "\n| ------------------------------ |\n";
+	}
+
+	// Current state is the money that shall be returned
+	if ((final_state - aux) == 0) // if we reach the final state
+	{
+		std::cout << bank[bank_index] << "\n";
+		current_state += bank[bank_index];
+		std::cout << "\nFare returned: " << current_state << "\n";
+
+		if (debug)
+		{
+			std::cout << "Final state - current_state = 0 \n";
+		}
+
 		return;
 	}
-	
-	current_state
 
+	if ((final_state - aux) > 0) // still has not finished finding the change
+	{
+		current_state += bank[bank_index];
+		std::cout << bank[bank_index] << "\n";
+		findSolution(bank, size, final_state, current_state, bank_index);
+	}
+
+	else if ((final_state - aux) < 0) // if when returning money can no longer return because you would be given the user more money
+	{
+		// Do not update current_state
+		findSolution(bank, size, final_state, current_state, bank_index + 1); // change the index
+	}
 }
 
 void startTransaction(int arr[], int size, int price, int money)
@@ -73,14 +124,14 @@ void startTransaction(int arr[], int size, int price, int money)
 
 	// One way to do this is to think of the problem as an automata
 	int final_state = money - price; // this is the quantity that should be return to the user
+	// Assuming money that was paid is always bigger than price of the product
 
-	int result[size];
+	std::cout << "\n\n| ------ [Dynamic solution] ------ |\n\n";
+	findSolution(arr, size, final_state, 0, 0);
 
-	std::cout << "Dynamic solution: " << "\n";
-	findSolution(arr, result, final_state, 0);
-	prtArr(result, size);
-
-
+	lineBreak();
+	std::cout << "\n\n| ------ [Greedy solution] ------ |\n\n";
+	findSolution(arr, size, final_state, 0, 0);
 }
 
 int main()
