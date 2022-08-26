@@ -1,11 +1,12 @@
 #include <iostream>
+#include <vector>
+#include <climits>
 
 /*
    Programa hecho por github.com/justNeto
    Matricula: A01654419
    Alumno: Luis Ernesto Ladron de Guevara Gonzalez
 */
-
 
 bool debug;
 
@@ -21,7 +22,7 @@ void prtArr(int arr[], int size)
 
 void lineBreak()
 {
-	std::cout << std::endl;
+	std::cout << "\n";
 }
 
 int partition (int arr[], int first, int last)
@@ -53,7 +54,94 @@ void quickSort(int arr[], int first, int last)
     }
 }
 
-/* void findSolution(int bank[], int size, int final_state, int current_state, int bank_index, int aux2) */
+//solveGreedy(size, bank, 0, cases, currCase, 0, i);
+std::vector<int> solveGreedy(int bank[], int size, int final_state, int starting_index)
+{
+	int current_state = 0;
+	int bank_index = starting_index;
+	std::vector<int> currCase;
+
+	while (true)
+	{
+
+		if (debug)
+		{
+			std::cout << "::- [ Information ]\n";
+			std::cout << "Current state: " << current_state << "\n";
+			std::cout << "Final state: " << final_state << "\n";
+			std::cout << "Current index: " << bank_index << "\n";
+
+			std::cout << "\n| ------------------------------ |\n";
+		}
+
+		if (bank_index == size)
+		{
+			bank_index = 0;
+		}
+
+		int aux = current_state + bank[bank_index]; // final_state: total value that computer needs to returns. current_state: accumulative returned value by the machine
+
+		if ((final_state - aux) == 0)
+		{
+			current_state += bank[bank_index];
+			currCase.push_back(bank[bank_index]);
+
+			return currCase;
+		}
+
+		if ((final_state - aux) > 0) // still has not finished finding the change
+		{
+			current_state += bank[bank_index];
+			currCase.push_back(bank[bank_index]);
+
+			bank_index++;
+
+			continue;
+		}
+
+		if ((final_state - aux) < 0) // if when returning money can no longer return because you would be given the user more money
+		{
+			// Do not update current_state
+			bank_index++;
+
+			continue;
+		}
+	}
+}
+
+void findGreedySolution(int bank[], int size, int final_state)
+{
+	std::vector<std::vector<int>> cases;
+
+	for (int i = 0; i < size; i++)
+	{
+		std::vector<int> currCase = solveGreedy(bank, size, final_state, i);
+		cases.push_back(currCase);
+	}
+
+	std::vector<int> save_vector;
+	int min = INT_MAX;
+
+	for (std::vector<int> currVector : cases)
+	{
+		if (currVector.size() < min)
+		{
+			min = currVector.size();
+			save_vector = currVector;
+		}
+	}
+
+	int fare = 0;
+
+	for (int num : save_vector)
+	{
+		fare += num;
+		std::cout << num << "\n";
+	}
+
+	std::cout << "\nFare returned: " << fare << std::endl;
+}
+
 void findSolution(int bank[], int size, int final_state, int current_state, int bank_index)
 {
 
@@ -78,7 +166,6 @@ void findSolution(int bank[], int size, int final_state, int current_state, int 
 	}
 
 	int aux = current_state + bank[bank_index]; // auxiliar value to check if it should change index or not
-//	current_state += bank[bank_index]; // this adds to the fare that has to be returned
 
 	if (debug)
 	{
@@ -127,11 +214,11 @@ void startTransaction(int arr[], int size, int price, int money)
 	// Assuming money that was paid is always bigger than price of the product
 
 	std::cout << "\n\n| ------ [Dynamic solution] ------ |\n\n";
-	findSolution(arr, size, final_state, 0, 0);
+	findSolution(arr, size, final_state, 0, 0); // n * m solution
 
 	lineBreak();
-	std::cout << "\n\n| ------ [Greedy solution] ------ |\n\n";
-	findSolution(arr, size, final_state, 0, 0);
+	std::cout << "| ------ [Greedy solution] ------ |\n\n";
+	findGreedySolution(arr, size, final_state); // n^2 solution
 }
 
 int main()
@@ -149,8 +236,9 @@ int main()
 			std::cout << "Error. Please enter a number.\n";
 			std::cin.clear();
 			std::cin.ignore(10000, '\n');
-continue; }
 
+			continue;
+		}
 
 		// Convert double to int
 		convert = (int) arr_size;
@@ -270,13 +358,14 @@ continue; }
 		}
 		else
 		{
-			std::cout << fill_arr+1 << "/" << convert << std::endl;
+			std::cout << fill_arr+1 << "/" << convert << "\n";
 			arr[fill_arr] = std::stoi(input); // converts string to int
 			fill_arr++;
 		}
 	}
 
 	lineBreak();
+
 	int price;
 	int money;
 
@@ -315,8 +404,8 @@ continue; }
 	prtArr(arr, convert);
 	lineBreak();
 
-	std::cout << "Price of the product: " << price << std::endl;
-	std::cout << "Money payed: " << money << std::endl;
+	std::cout << "Price of the product: " << price << "\n";
+	std::cout << "Money payed: " << money << "\n";
 
 	startTransaction(arr, convert, price, money); // non-greedy algorithm - dynamic programming
 	return 0;
