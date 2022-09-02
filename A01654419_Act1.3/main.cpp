@@ -18,7 +18,7 @@ void prtMat(std::vector<std::vector<int>> mat)
 		{
 			if (col == 3)
 			{
-				std::cout << "[1]";
+				std::cout << "[0]";
 			}
 			else
 			{
@@ -39,19 +39,6 @@ void lineBreak()
 //solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
 std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int end_y, int size_x, int size_y, std::vector<std::vector<int>> mat)
 {
-
-	/*
-	   		    size_x
-	   		       ^
-	   		       |
-		| 1 | 0 | 0 | [0] [0, 1, 2] -> size_y
-		| 1 | 1 | 0 | [1]
-		| 0 | 1 | 0 | [2]
-
-		| 2 | 2 | 1 |
-		| 1 | 0 | 0 |
-		| 1 | 1 | 1 |
-	*/
 
 	if (debug)
 	{
@@ -80,7 +67,6 @@ std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int e
 
 		return mat;
 	}
-
 
 	// if all non-zero values inside mat are 2 and still no answer found then there is no solution
 
@@ -272,32 +258,19 @@ std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int e
 	}
 
 	// Check right
-	if ((aux_right < size_y) && (mat[curr_x][aux_right] == 3)) // if can go right and is a path already traced path
+	if (
+			(mat[curr_x][aux_right] == 3) &&
+			(mat[curr_x][aux_left] == 3) &&
+			(mat[aux_down][curr_y] == 3) &&
+			(mat[curr_x][aux_right] == 3)
+	   )
 	{
-		std::cout << "Laberynth cannot cannot be solved\n";
-		exit(0);
+		mat[0][0] == 5;
+		return mat;
 	}
 
-	// Check left
-	if ((aux_left >= 0) && (mat[curr_x][aux_left] == 3)) // if can go right and is it not a wall
-	{
-
-		std::cout << "Laberynth cannot cannot be solved\n";
-		exit(0);
-	}
-
-	if ((aux_down < size_x) && (mat[aux_down][curr_y] == 2)) // if can go down and not a wall
-	{
-		std::cout << "Laberynth cannot cannot be solved\n";
-		exit(0);
-	}
-
-	// Check up
-	if ((aux_up >= 0) && (mat[curr_x][aux_right] == 2)) // if can go right and is it not a wall
-	{
-		std::cout << "Laberynth cannot cannot be solved\n";
-		exit(0);
-	}
+	mat[0][0] == 5;
+	return mat;
 }
 
 void backtrackingSol(int curr_x, int curr_y, int end_x, int end_y, std::vector<std::vector<int>> mat)
@@ -316,6 +289,12 @@ void backtrackingSol(int curr_x, int curr_y, int end_x, int end_y, std::vector<s
 	}
 
 	copy = solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, copy);
+
+	if (copy[0][0] == 5)
+	{
+		std::cout << "Laberynth cannot cannot be solved\n";
+		exit(0);
+	}
 
 	std::cout << "Array before: \n";
 	prtMat(mat);
@@ -450,13 +429,13 @@ int main()
 
 	while (row_aux < row_n)
 	{
+
 		std::cout << "Filling row # " << row_aux+1 << "/" << row_n << "\n";
 		int col_aux = 0;
 		std::vector<int> data;
 
 		while (col_aux < col_n)
 		{
-
 			bool nan = false; // bool var to check if it's not a valid input
 
 			// Reads the line and detects if double or input
@@ -488,6 +467,12 @@ int main()
 
 				data.push_back(std::stoi(input)); // converts string to int
 				col_aux++;
+			}
+
+			if ((row_aux == 0) && (data[0] == 0))
+			{
+				std::cout << "Warning: the first value of the laberynth should always be one. Changing it automatically.\n";
+				data[0] = 1;
 			}
 		}
 
