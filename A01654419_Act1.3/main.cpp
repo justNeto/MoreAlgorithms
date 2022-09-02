@@ -16,7 +16,14 @@ void prtMat(std::vector<std::vector<int>> mat)
 	{
 		for (auto const &col : row)
 		{
-			std::cout << "[" << col << "]";
+			if (col == 3)
+			{
+				std::cout << "[1]";
+			}
+			else
+			{
+				std::cout << "[" << col << "]";
+			}
 		}
 		std::cout << "\n";
 	}
@@ -28,21 +35,293 @@ void lineBreak()
 	std::cout << "\n";
 }
 
-void backtrackingSol(int curr_x, int curr_y, int end_x, int end_y, std::vector<std::vector<int>> mat)
+
+//solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int end_y, int size_x, int size_y, std::vector<std::vector<int>> mat)
 {
+
+	/*
+	   		    size_x
+	   		       ^
+	   		       |
+		| 1 | 0 | 0 | [0] [0, 1, 2] -> size_y
+		| 1 | 1 | 0 | [1]
+		| 0 | 1 | 0 | [2]
+
+		| 2 | 2 | 1 |
+		| 1 | 0 | 0 |
+		| 1 | 1 | 1 |
+	*/
+
 	if (debug)
 	{
+		std::cout << "Before updating matrix:\n";
+		prtMat(mat);
 		std::cout << "Current x_val: " << curr_x << "\n";
 		std::cout << "Current y_val: " << curr_y << "\n";
 		lineBreak();
-		std::cout << "End x_val: " << end_x << "\n";
-		std::cout << "End y_val: " << end_y << "\n";
+		std::cout << "Size of height: " << size_x << "\n";
+		std::cout << "Size of length: " << size_y << "\n";
+		lineBreak();
+		std::cout << "End x: " << end_x << "\n";
+		std::cout << "End y: " << end_y << "\n";
+		lineBreak();
 	}
 
-	if (curr_x == curr_y)
+	// If curr_x and curr_y are the same as end then end the problem
+	if ((curr_x == end_x) && (curr_y == end_y) )
 	{
-		std
+		if (debug)
+		{
+			std::cout << "Solution found" << std::endl;
+		}
+
+		mat[curr_x][curr_y] = 2;
+
+		return mat;
 	}
+
+
+	// if all non-zero values inside mat are 2 and still no answer found then there is no solution
+
+	// Check right
+	int aux_right = curr_y + 1;
+
+	if ((aux_right < size_y) && (mat[curr_x][aux_right] == 1)) // if can go right and is it not a wall
+	{
+		mat[curr_x][curr_y] = 2; // current position is marked as visited
+		curr_y += 1; // New current position updated
+
+		if (debug)
+		{
+			std::cout << "Can move right\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat); // recursion
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move right\n";
+	}
+
+	// Check left
+	int aux_left = curr_y - 1;
+
+	if ((aux_left >= 0) && (mat[curr_x][aux_left] == 1)) // if can go right and is it not a wall
+	{
+		mat[curr_x][curr_y] = 2; // already visited
+		curr_y -= 1;
+
+		if (debug)
+		{
+			std::cout << "Can move left\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move left\n";
+	}
+
+	// Check down
+	int aux_down = curr_x + 1;
+
+	if ((aux_down < size_x) && (mat[aux_down][curr_y] == 1)) // if can go down and not a wall
+	{
+		mat[curr_x][curr_y] = 2; // already visited
+		curr_x += 1;
+
+		if (debug)
+		{
+			std::cout << "Can move down\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move down\n\n";
+	}
+
+	// Check up
+	int aux_up = curr_x - 1;
+
+	if ((aux_up >= 0) && (mat[curr_x][aux_right] == 1)) // if can go right and is it not a wall
+	{
+		mat[curr_x][curr_y] = 2; // already visited
+		curr_x -= 1;
+
+		if (debug)
+		{
+			std::cout << "Can move up\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move up\n\n";
+	}
+
+
+	// START BACKTRACKING
+	// It reaches here if it cannot move through ones
+
+	// Check right
+	if ((aux_right < size_y) && (mat[curr_x][aux_right] == 2)) // if can go right and is a path already traced path
+	{
+		mat[curr_x][curr_y] = 3; // Can no longer go to this path as it is a three
+		curr_y += 1; // New current position updated
+
+		if (debug)
+		{
+			std::cout << "Can move right\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat); // recursion
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move right\n";
+	}
+
+	// Check left
+	if ((aux_left >= 0) && (mat[curr_x][aux_left] == 2)) // if can go right and is it not a wall
+	{
+		mat[curr_x][curr_y] = 3; // already visited
+		curr_y -= 1;
+
+		if (debug)
+		{
+			std::cout << "Can move left\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move left\n";
+	}
+
+	if ((aux_down < size_x) && (mat[aux_down][curr_y] == 2)) // if can go down and not a wall
+	{
+		mat[curr_x][curr_y] = 3; // already visited
+		curr_x += 1;
+
+		if (debug)
+		{
+			std::cout << "Can move down\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move down\n\n";
+	}
+
+	// Check up
+	if ((aux_up >= 0) && (mat[curr_x][aux_right] == 2)) // if can go right and is it not a wall
+	{
+		mat[curr_x][curr_y] = 3; // already visited
+		curr_x -= 1;
+
+		if (debug)
+		{
+			std::cout << "Can move up\n\n";
+
+			std::cout << "Updating matrix:\n";
+			prtMat(mat);
+		}
+
+		return solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
+	}
+
+	if (debug)
+	{
+		std::cout << "Can NOT move up\n\n";
+	}
+
+	// Check right
+	if ((aux_right < size_y) && (mat[curr_x][aux_right] == 3)) // if can go right and is a path already traced path
+	{
+		std::cout << "Laberynth cannot cannot be solved\n";
+		exit(0);
+	}
+
+	// Check left
+	if ((aux_left >= 0) && (mat[curr_x][aux_left] == 3)) // if can go right and is it not a wall
+	{
+
+		std::cout << "Laberynth cannot cannot be solved\n";
+		exit(0);
+	}
+
+	if ((aux_down < size_x) && (mat[aux_down][curr_y] == 2)) // if can go down and not a wall
+	{
+		std::cout << "Laberynth cannot cannot be solved\n";
+		exit(0);
+	}
+
+	// Check up
+	if ((aux_up >= 0) && (mat[curr_x][aux_right] == 2)) // if can go right and is it not a wall
+	{
+		std::cout << "Laberynth cannot cannot be solved\n";
+		exit(0);
+	}
+}
+
+void backtrackingSol(int curr_x, int curr_y, int end_x, int end_y, std::vector<std::vector<int>> mat)
+{
+
+	int size_x = end_x + 1;
+	int size_y = end_y + 1;
+
+
+	std::vector<std::vector<int>> copy = mat;
+
+	if (debug)
+	{
+		std::cout << "Copy matrix debug: \n";
+		prtMat(copy);
+	}
+
+	copy = solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, copy);
+
+	std::cout << "Array before: \n";
+	prtMat(mat);
+
+	std::cout << "Solution: \n";
+	prtMat(copy);
 
 	exit(0);
 }
