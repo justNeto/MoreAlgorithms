@@ -6,6 +6,8 @@
    Programa hecho por github.com/justNeto
    Matricula: A01654419
    Alumno: Luis Ernesto Ladron de Guevara Gonzalez
+   Added some other stuff
+   Added some stuff
 */
 
 bool debug;
