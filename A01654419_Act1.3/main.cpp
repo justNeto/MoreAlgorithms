@@ -39,7 +39,6 @@ void lineBreak()
 //solveBack(curr_x, curr_y, end_x, end_y, size_x, size_y, mat);
 std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int end_y, int size_x, int size_y, std::vector<std::vector<int>> mat)
 {
-
 	if (debug)
 	{
 		std::cout << "Before updating matrix:\n";
@@ -67,8 +66,6 @@ std::vector<std::vector<int>> solveBack(int curr_x, int curr_y, int end_x, int e
 
 		return mat;
 	}
-
-	// if all non-zero values inside mat are 2 and still no answer found then there is no solution
 
 	// Check right
 	int aux_right = curr_y + 1;
