@@ -1,7 +1,6 @@
 #include <iostream>
-
-
 /*
+   Added some stuff
    Programa hecho por github.com/justNeto
    Matricula: A01654419
    Alumno: Luis Ernesto Ladron de Guevara Gonzalez
