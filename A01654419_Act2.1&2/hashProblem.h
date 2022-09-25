@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -290,5 +291,8 @@ void solutionHashString(std::vector<std::string> hash_files)
 
 	std::cout << greetings;
 
-	hashing_files(hash_files[0], hash_files[1]);
+	for (int i = 0; i < hash_files.size()-1; i++) // omitting the last value
+	{
+		hashing_files(hash_files[i], hash_files[hash_files.size()-1]);
+	}
 }

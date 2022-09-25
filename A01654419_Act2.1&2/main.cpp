@@ -327,45 +327,57 @@ int main(int argc, char ** argv)
 			exit(1);
 		}
 
-		if (files_hash_array.size() > 2)
+		if (files_hash_array.size() > 2) // if is bigger than 2
+		{
+			int n;
+
+			try
+			{
+				n = std::stoi(files_hash_array[files_hash_array.size()-1]);
+
+				if ((n >= 16) && (n <= 64))
+				{
+					if (verbose) std::cout << "<N_COL> value is correct.\n";
+				}
+				else
+				{
+					std::cout << "\n::- <N_COL> value is not between 16 and 64. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
+					exit(1);
+				}
+
+				if (n % 4 != 0) // not a multiple of 4
+				{
+					std::cout << "\n::- <N_COL> value is not a multiple of 4. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
+					exit(1);
+				}
+			}
+			catch (...)
+			{
+				std::cout << "\n::- Error. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
+				exit(1);
+			}
+
+			std::cout << "n value " << n << "\n";
+
+			for (int i = 0; i < files_hash_array.size()-2; i++)
+			{
+				if (verbose) std::cout << "Searching for file : " << files_hash_array[i] << "\n";
+
+				std::ifstream infile(files_hash_array[i]); // create ifstream var to read from
+
+				if(infile.fail())
+				{
+					std::cout << "\n::-Error. Inputted '" << files_hash_array[i] << "' file does not exist.";
+					exit(0);
+				}
+
+				if (verbose) std::cout << "File does exist\n";
+			}
+
+		}
+		else
 		{
 			std::cout << "\n::- Missing arguments. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
-			exit(1);
-		}
-
-		std::ifstream infile(files_hash_array[0]); // first value of hash_arry is always a file
-
-		if (infile.fail())
-		{
-			std::cout << "\n::- Error. File does not exist. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
-			exit(1);
-		}
-
-		if (verbose) std::cout << "File does exist\n";
-
-		try
-		{
-			int n = std::stoi(files_hash_array[1]);
-
-			if ((n >= 16) && (n <= 64))
-			{
-				if (verbose) std::cout << "<N_COL> value is correct.\n";
-			}
-			else
-			{
-				std::cout << "\n::- <N_COL> value is not between 16 and 64. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
-				exit(1);
-			}
-
-			if (n % 4 != 0) // not a multiple of 4
-			{
-				std::cout << "\n::- <N_COL> value is not a multiple of 4. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
-				exit(1);
-			}
-		}
-		catch (...)
-		{
-			std::cout << "\n::- Error. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
 			exit(1);
 		}
 	}
