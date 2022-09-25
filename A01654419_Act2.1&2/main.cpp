@@ -38,8 +38,8 @@ void prtHelp(std::string name)
 
 	std::cout << ":: < Sufix array problem > :: \n";
 	std::cout << "Passes a text file and solves it.\n";
-	std::cout << "  -sa --sufix-array FILE1, FILE2 ...\n";
-	std::cout << "       Specify the files that will be used to find malicious code inside them. \n\n";
+	std::cout << "  -sa --sufix-array FILE1\n";
+	std::cout << "       Specify the file that will be used to create the suffix array and order them alphabetically. \n\n";
 
 	std::cout << ":: < Other opts > :: \n";
 	std::cout << "  -v, --verbose						prints the program specifics in runtime.\n";
