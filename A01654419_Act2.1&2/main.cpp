@@ -33,8 +33,8 @@ void prtHelp(std::string name)
 
 	std::cout << ":: < Hash string problem > :: \n";
 	std::cout << "Passes a text file and solves it.\n";
-	std::cout << "  -hs, --hash-string FILE1, FILE2, ...\n";
-	std::cout << "		Solves hash string problem by passing a file from standard input.\n\n";
+	std::cout << "  -hs, --hash-string FILE1, <N_COL> ...\n";
+	std::cout << "		Solves hash string problem by passing a file from standard input and generating <N_COL> columns. <N_COL> value should be between 16 and 64.\n\n";
 
 	std::cout << ":: < Sufix array problem > :: \n";
 	std::cout << "Passes a text file and solves it.\n";
@@ -347,13 +347,19 @@ int main(int argc, char ** argv)
 		{
 			int n = std::stoi(files_hash_array[1]);
 
-			if ((n >= 16) && (n <= 64) && (n % 4 == 0))
+			if ((n >= 16) && (n <= 64))
 			{
-				if (verbose) std::cout << "File does exist\n";
+				if (verbose) std::cout << "<N_COL> value is correct.\n";
 			}
 			else
 			{
-				std::cout << "\n::- Error. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
+				std::cout << "\n::- <N_COL> value is not between 16 and 64. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
+				exit(1);
+			}
+
+			if (n % 4 != 0) // not a multiple of 4
+			{
+				std::cout << "\n::- <N_COL> value is not a multiple of 4. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
 				exit(1);
 			}
 		}
