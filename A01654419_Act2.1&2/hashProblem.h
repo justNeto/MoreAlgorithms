@@ -19,7 +19,7 @@ void prtHexaHash(std::vector<std::string> vector, int length)
 {
 	for (auto col : vector)
 	{
-		std::cout << "[" << col << "]";
+		std::cout << "[" << col << "] -- ";
 	}
 
 	std::cout << "\n";
