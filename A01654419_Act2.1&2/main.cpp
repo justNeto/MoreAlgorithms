@@ -327,7 +327,7 @@ int main(int argc, char ** argv)
 			exit(1);
 		}
 
-		if (files_hash_array.size() > 2) // if is bigger than 2
+		if (files_hash_array.size() >= 2) // if is bigger or equal than 2
 		{
 			int n;
 
