@@ -1,10 +1,11 @@
-#ifndef FIRST_PROJECT
-#define FIRST_PROJECT
+#ifndef MAIN
+#define MAIN
 
 #include "genTxtFiles.h"
+#include "triesModule.h"
 #include <vector>
 
-bool verbose;
+bool verbose = false;
 
 // Prints the current development version
 void prtVersion()
@@ -159,7 +160,7 @@ int main(int argc, char ** argv)
 	      }
 
 		// Use files to solve first problem
-		if ((argv[aux] == std::string("-ffp")) || (argv[aux] == std::string("--files-first-problem")))
+		if ((argv[aux] == std::string("-cnff")) || (argv[aux] == std::string("--create-nodes-from-file")))
 	      {
 	            file_opt = true;
 			aux++;
@@ -167,24 +168,9 @@ int main(int argc, char ** argv)
 	      }
 
 		// Use patterns to solve first problem
-	      if ((argv[aux] == std::string("-pfp")) || (argv[aux] == std::string("--patterns-first-problem")))
+	      if ((argv[aux] == std::string("-sfw")) || (argv[aux] == std::string("--search-for-words")))
 	      {
 		      pattern_opt = true; // selects the option to work with
-			aux++;
-		      continue;
-	      }
-
-		// Files for the second problem
-	      if ((argv[aux] == std::string("-fsp")) || (argv[aux] == std::string("--files-second-problem")))
-	      {
-			files_second_opt = true; // selects the option to work with
-			aux++;
-		      continue;
-	      }
-
-	      if ((argv[aux] == std::string("-ftp")) || (argv[aux] == std::string("--files-third-problem")))
-	      {
-			files_third_opt = true; // selects the option to work with
 			aux++;
 		      continue;
 	      }
@@ -206,13 +192,6 @@ int main(int argc, char ** argv)
 			continue;
 	      }
 
-	      if ((argv[aux] == std::string("-l")) || (argv[aux] == std::string("--logs"))) // if logs active
-	      {
-			logs = true;
-			aux++;
-			continue;
-	      }
-
 		// Show current version of proyect
 	      if (argv[aux] == std::string ("--version")) // if file options selected
 	      {
@@ -227,8 +206,7 @@ int main(int argc, char ** argv)
 	      }
 
 	      // If not entering a file then some erros has been made
-	      std::cout << "Invalid option. Try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
-	      /* std::cout << "Invalid option. Try findPattern -h or findPattern --help for more information.\n"; */
+	      std::cout << "Invalid option. Please try " << binary_name << " -h or " << binary_name << " --help for more information.\n";
 		exit(1);
 	}
 
@@ -265,7 +243,7 @@ int main(int argc, char ** argv)
 
 		if (verbose) std::cout << "::- Solution for the first problem:\n";
 		// Solution one
-		tries_words_solutions(files, patterns); // passes files and patterns
+		tries_words_solutions(files, patterns, verbose); // passes files and patterns
 
 		if (verbose) std::cout << "::- Simulation mode terminated.\n";
 		exit(0);
@@ -416,7 +394,6 @@ int main(int argc, char ** argv)
 		for (auto &file_name : patterns)
 		{
 			if (verbose) std::cout << "Searching for pattern : " << file_name << "\n";
-
 			std::ifstream infile(file_name); // create ifstream var to read from
 
 			if(infile.fail())
@@ -433,7 +410,7 @@ int main(int argc, char ** argv)
 	if ((files.size() != 0) && (patterns.size() != 0) && (file_opt) && (pattern_opt)) // if file_opt and pattern_opt selected
 	{
 		// Solve first problem function
-		tries_words_solutions(files, patterns);
+		tries_words_solutions(files, patterns, verbose);
 	}
 	else if ((files.size() != 0) && patterns.empty()) // if files exist but patterns does not
 	{
