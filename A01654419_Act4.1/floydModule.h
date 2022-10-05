@@ -5,51 +5,88 @@
 #include <iostream>
 #include <limits.h>
 
-void makeMatrixRecorridos(std::vector<std::vector<char>> &matriz, std::vector<char> indices){
-    for(int i = 0; i<matriz.size(); i++){
-        for(int j = 0; j<matriz[0].size(); j++){
-            if(i == j){
-                matriz[i][j] = '-';
-            }else{
-                matriz[i][j] = indices[j];
-            }
-        }
-    }
+// print vector
+void printVector(std::vector<int> &vec)
+{
+	for(int i = 0; i<vec.size(); i++)
+	{
+		std::cout << vec[i] << " ";
+	}
+	std::cout << "\n";
 }
 
+std::vector<std::vector<int> > gen_travel_matrix(int mat)
+{
+	// loop through matrix and fill the same columns with the same value as the row
+	std::vector<std::vector<int> > travel_matrix;
 
-void fillMatrixRecorridos(std::vector<std::vector<char>> &matriz, int size){
-	std::vector<char> fila;
-    fila.resize(size,'a');
+	for (int i = 0; i < mat; i++)
+	{
+		std::vector<int> row;
 
-    for(int i = 0; i<size; i++){
-        matriz.push_back(fila);
-    }
+		for (int j = 0; j < mat; j++)
+		{
+			row.push_back(j);
+		}
+		travel_matrix.push_back(row);
+	}
+
+	return travel_matrix;
 }
 
-void printMatrix(std::vector<std::vector<int>> &matriz){
-    for(int i = 0; i<matriz.size(); i++){
-        for(int j = 0; j<matriz[0].size(); j++){
+std::vector<int> gen_indexes(int mat)
+{
+	// loop through matrix and fill the same columns with the same value as the row
+	std::vector<int> indexes;
+
+	for (int i = 0; i < mat; i++)
+	{
+		indexes.push_back(i);
+	}
+
+	return indexes;
+}
+
+std::vector<std::vector<int> > gen_travel_matrix(std::vector<int> mat)
+{
+	// loop through matrix and fill the same columns with the same value as the row
+	std::vector<std::vector<int> > travel_matrix;
+
+	for (int i = 0; i < mat.size(); i++)
+	{
+		std::vector<int> row;
+		for (int j = 0; j < mat.size(); j++)
+		{
+			if (mat[i] == mat[j])
+			{
+				row.push_back(i);
+			}
+			row.push_back(mat[i]);
+		}
+		travel_matrix.push_back(row);
+	}
+
+	return travel_matrix;
+}
+
+void printMatrixRecorridos(std::vector<std::vector<int> > &matriz)
+{
+    for(int i = 0; i<matriz.size(); i++)
+    {
+        for(int j = 0; j<matriz[0].size(); j++)
+	{
 		  std::cout <<matriz[i][j]<<" ";
         }
-	  std::cout << "\n";
+
+	std::cout << "\n";
     }
 }
 
-void printMatrixRecorridos(std::vector<std::vector<char>> &matriz){
-    for(int i = 0; i<matriz.size(); i++){
-        for(int j = 0; j<matriz[0].size(); j++){
-		  std::cout <<matriz[i][j]<<" ";
-        }
-	  std::cout << "\n";
-    }
-}
-
-void floyd_algorithm(std::vector<std::vector<int>> &matrix, std::vector<std::vector<char>> &matrizRecorridos, std::vector<char> indices)
+void floyd_algorithm(std::vector<std::vector<int> > matriz, std::vector<std::vector<int> > travel_matrix, std::vector<int> indexes)
 {
 	int infinito = INT_MAX;
 
-	std::vector<std::vector<char>> matrizRecorridos2 = matrizRecorridos;
+	std::vector<std::vector<int> > travel_matrix_two = travel_matrix;
 
 	for(int k = 0; k<matriz.size(); k++) //Filas
 	{
@@ -61,11 +98,11 @@ void floyd_algorithm(std::vector<std::vector<int>> &matrix, std::vector<std::vec
 					std::cout << "\n";
 					matriz[i][j] = matriz[i][k] + matriz[k][j];
 					std::cout << "Estos son los indices del cambio " << k<< " " << i<< " "<< j<< "\n";
-					printMatrix(matriz);
+					printMatrixRecorridos(matriz);
 					std::cout << "\n";
 					//Falta poner las letras correctas en la matriz de Recorridos
-					matrizRecorridos[i][j] = indices[k];
-					printMatrixRecorridos(matrizRecorridos);
+					travel_matrix[i][j] = indexes[k];
+					printMat(travel_matrix);
 					std::cout << "\n";
 				}
 
@@ -74,45 +111,27 @@ void floyd_algorithm(std::vector<std::vector<int>> &matrix, std::vector<std::vec
     }
 
 	std::cout << "\n";
-    printMatrix(matriz);
+    printMat(matriz);
     std::cout << "\n";
-    printMatrixRecorridos(matrizRecorridos);
-
-}
-
-
-int main(){
-    int x = infinito;
-
-    std::vector<std::vector<int>> matrizDikstra = matriz;
-    std::vector<std::vector<char>> matrizRecorridos;
-    std::vector<char> indices = {'A','B','C','D','E'};
-
-    std::cout << "\n";
-    //printMatrix(matriz);
-    std::cout << "\n";
-    fillMatrixRecorridos(matrizRecorridos, indices.size());
-    makeMatrixRecorridos(matrizRecorridos, indices);
-    printMatrixRecorridos(matrizRecorridos);
+    printMat(travel_matrix);
 }
 
 // First problem consist in each transmission file
-void solve_floyd(std::std::vector<std::string> files, bool verbose)
+void solve_floyd(std::vector<std::string> files, bool verbose)
 {
 	std::string greetings = "| --- Start finding shortest paths for files --- | \n";
-	std::std::cout  << greetings;
+	std::cout  << greetings;
 
 	std::string algorithm = "Floyd's";
 
-	for (auto &file_name : files) // selects the current file name in std::vector
+	for (std::string &file_name : files) // selects the current file name in std::vector
 	{
-		matrix = validate_matrix_input(file_name, algorithm); // passes the file and the patterns files
+		std::vector<std::vector<int> > matrix = validate_matrix_input(file_name, algorithm); // passes the file and the patterns files
+		std::vector<std::vector<int> > travel_matrix = gen_travel_matrix(matrix[0].size());
+		std::vector<int> indexes = gen_indexes(matrix[0].size());
 
-		fillMatrixRecorridos(matrizRecorridos, indices.size());
-		makeMatrixRecorridos(matrizRecorridos, indices);
-		printMatrixRecorridos(matrizRecorridos);
-
-		floyd_algorithm(matrix, matrizRecorridos, indices);
+		printMat(travel_matrix);
+		floyd_algorithm(matrix, travel_matrix, indexes);
 	}
 }
 

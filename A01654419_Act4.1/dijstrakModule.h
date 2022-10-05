@@ -8,7 +8,7 @@
 #include <limits.h>
 #include <vector>
 
-void dijstrak_algorithm(std::vector <std::vector<int>> mat, int start, int end)
+void dijstrak_algorithm(std::vector <std::vector<int> > mat, int start, int end)
 {
 	std::queue<int> path; // queue to store path
 	int *distance = new int[mat[0].size()]; // ptr to distance array

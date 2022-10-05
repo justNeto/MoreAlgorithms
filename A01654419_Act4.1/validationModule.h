@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <string>
 
-void prtMat(std::vector<std::vector<int> > matrix)
+void printMat(std::vector<std::vector<int> > matrix)
 {
     std::cout << "| --- Printing nodes and their relationships --- |\n";
     std::cout << " Format - :NODE:, TO_NODE_N[WEIGHT], TO_NODE_N+1[WEIGHT]...\n\n";
@@ -23,7 +23,7 @@ void prtMat(std::vector<std::vector<int> > matrix)
     }
 }
 
-void validate_adjacency_mat(std::vector<std::vector<int>> adj_mat)
+void validate_adjacency_mat(std::vector<std::vector<int> > adj_mat)
 {
 	for (int i = 0; i < adj_mat.size(); i++)
 	{
@@ -39,7 +39,7 @@ void validate_adjacency_mat(std::vector<std::vector<int>> adj_mat)
 	}
 }
 
-std::vector<std::vector<int>> validate_matrix_input(std::string file_name, std::string algorithm)
+std::vector<std::vector<int> > validate_matrix_input(std::string file_name, std::string algorithm)
 {
 	std::ifstream infile(file_name); // read each line of file
 
@@ -47,7 +47,7 @@ std::vector<std::vector<int>> validate_matrix_input(std::string file_name, std::
 	std::cout << searching;
 
 	std::string line;
-	std::vector<std::vector<int>> mat; // vector matrix
+	std::vector<std::vector<int> > mat; // vector matrix
 
 	int row = 0;
 
@@ -76,22 +76,47 @@ std::vector<std::vector<int>> validate_matrix_input(std::string file_name, std::
 		}
 
 		std::string aux;
+		int aux_int = 0; // index of the current line
 
-		for (int i = 0; i != line.length() + 1; i++)
+		while (true)
 		{
-			if (line[i] == ' ' || i == line.length()) // checks if current line[i] is a ''
+			// MAX aux_int = 9
+			// MAX line.length() = 10
+			if (aux_int >= line.length() - 1) // if current index = or larger than this then cannot continue checking
 			{
-				curr_row.push_back(std::stoi(aux)); // push the number to the vector
-				aux = "";
+				aux += line[aux_int]; // add the last element to aux
+				curr_row.push_back(std::stoi(aux)); // push the last element
+				break;
+			}
+
+			if (line[aux_int] == ' ') // checks if current line[i] is a ''
+			{
+				curr_row.push_back(std::stoi(aux)); // push the aux to the vector
+				aux = ""; // resets it
+				aux_int++; // adds 1 to the index
+				continue; // continue to the next iteration
+			}
+
+			if (isdigit(line[aux_int])) // if is digit then add it and go to next
+			{
+				aux += line[aux_int];
+				aux_int++;
 				continue;
 			}
-			else if (isdigit(line[i]))
+
+			if (line[aux_int] == '-') // if is negative
 			{
-				aux += line[i];
-			}
-			// is negative
-			else if (line[i] == '-')
-			{
+				if ((aux_int + 1 <= line.length() - 1) && (algorithm == "Floyd's")) // if there is next and is floyds
+				{
+					if (line[aux_int + 1] == '1')
+					{
+						aux += line[aux_int];
+						aux += line[aux_int + 1];
+						aux_int += 2;
+						continue;
+					}
+				}
+					
 				std::cout << "::- [Negative numbers are not allowed. Exiting...]" << std::endl;
 				exit(1);
 			}
@@ -118,11 +143,10 @@ std::vector<std::vector<int>> validate_matrix_input(std::string file_name, std::
 	// Validate adj_mat and then continue
 	validate_adjacency_mat(mat);
 
-	prtMat(mat);
+	printMat(mat);
 	std::cout << "\n";
 
 	return mat;
-
 }
 
 #endif
