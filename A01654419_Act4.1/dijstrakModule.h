@@ -6,9 +6,8 @@
 #include <queue>
 #include <set>
 #include <limits.h>
-#include <vector>
 
-void dijstrak_algorithm(std::vector <std::vector<int> > mat, int start, int end)
+void dijstrak_algorithm(std::vector <std::vector<int>> mat, int start, int end)
 {
 	std::queue<int> path; // queue to store path
 	int *distance = new int[mat[0].size()]; // ptr to distance array
@@ -106,6 +105,7 @@ void solve_dijstrak(std::vector<std::string> files, bool verbose)
 	for (auto &file_name : files) // selects the current file name in vector
 	{
 		matrix = validate_matrix_input(file_name, algorithm); // passes the file and the patterns files
+		printMat(matrix); // prints the matrix
 
 		// Apply dijstrak after validation using adjacency matrix
 		for (int i = 0; i < matrix[0].size(); i++)
