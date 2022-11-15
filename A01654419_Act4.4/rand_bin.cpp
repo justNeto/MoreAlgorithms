@@ -61,6 +61,10 @@ int binary_search(double search, std::vector<double> arr, int left, int right)
 				return -1;
 			}
 		}
+		else if (left == 0)
+		{
+			return -1;
+		}
 		// Make a guess. Usually mid, but in this case randomized
 
 		unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
