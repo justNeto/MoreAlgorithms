@@ -105,6 +105,17 @@ void random_bin_search(double search, std::vector<double> arr)
 
 	if (debug) std::cout << arr.size() << "\n";
 
+	if (search < arr[0])
+	{
+		std::cout << "\nNumber is not present in the array\n";
+		exit(0);
+	}
+	else if (search > arr[arr.size()-1])
+	{
+		std::cout << "\nNumber is not present in the array\n";
+		exit(0);
+	}
+
 	// This is the driver code for the algoritm
 	int index = binary_search(search, arr, 0, arr.size());
 
